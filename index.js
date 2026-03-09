@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
-import { PORT , MONGODBURL } from "./env.js";
+import { PORT , MONGODBURL, FRONTURL } from "./env.js";
 import authRoutes from "./routes/authRoutes.js";
 import DashboardRoutes from "./routes/dashboardRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
@@ -16,7 +16,7 @@ app.use("/uploads",express.static("uploads"));
 app.use(express.json());
 
 app.use(cors({
-  origin:"http://localhost:5173",
+  origin:FRONTURL,
   credentials:true
 }));
 
