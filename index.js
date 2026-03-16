@@ -16,7 +16,10 @@ app.use("/uploads",express.static("uploads"));
 app.use(express.json());
 
 app.use(cors({
-  origin:FRONTURL,
+  origin: [
+    "http://localhost:5173",
+    FRONTURL
+  ],
   credentials:true
 }));
 
