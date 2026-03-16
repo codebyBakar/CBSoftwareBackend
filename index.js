@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
-import { PORT , MONGODBURL, FRONTURL } from "./env.js";
+import { MONGODBURL, FRONTURL } from "./env.js";
 import authRoutes from "./routes/authRoutes.js";
 import DashboardRoutes from "./routes/dashboardRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
@@ -15,18 +15,27 @@ app.use("/uploads",express.static("uploads"));
 
 app.use(express.json());
 
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  FRONTURL
+];
+
 app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    FRONTURL
-  ],
+  origin: function(origin, callback){
+    if(!origin || allowedOrigins.includes(origin)){
+      callback(null,true);
+    }else{
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials:true
 }));
 
-mongoose.connect(`${MONGODBURL}/restraunt`)
-.then(()=>console.log("DB Connected Successfully"));
 
-
+mongoose.connect(MONGODBURL)
+.then(()=>console.log("DB Connected Successfully"))
+.catch(err => console.log("MongoDB Error:", err));
 
 
 app.use("/api/auth",authRoutes);
