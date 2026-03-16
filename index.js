@@ -36,4 +36,6 @@ app.use("/api/categories",categoryRoutes);
 app.use("/api/orders",OrderRoutes);
 
 
-export default app
+app.listen(PORT,()=>{
+  console.log(`Server running on http://localhost:${PORT}`);
+});
