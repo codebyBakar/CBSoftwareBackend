@@ -3,12 +3,15 @@ import Product from "../models/Product.js";
 
 // ADD PRODUCT
 export const addProduct = async (req, res) => {
-
   try {
 
     const { name, category, description, price, quantity, status } = req.body;
 
-    const image = req.file ? req.file.filename : "";
+    let image = "";
+
+    if (req.file) {
+      image = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
+    }
 
     const product = await Product.create({
       name,
@@ -16,24 +19,17 @@ export const addProduct = async (req, res) => {
       description,
       price,
       quantity,
-      image,
-      status
+      status,
+      image
     });
 
     res.json(product);
 
   } catch (err) {
-
-    console.log(err);
-
-    res.status(500).json({
-      message: "Error adding product"
-    });
-
+    console.log("ADD PRODUCT ERROR:", err);
+    res.status(500).json({ message: "Error adding product" });
   }
-
 };
-
 
 
 // GET ALL PRODUCTS
@@ -96,7 +92,6 @@ export const deleteProduct = async (req, res) => {
 
 // UPDATE PRODUCT
 export const updateProduct = async (req, res) => {
-
   try {
 
     const { name, category, description, price, quantity, status } = req.body;
@@ -111,7 +106,7 @@ export const updateProduct = async (req, res) => {
     };
 
     if (req.file) {
-      data.image = req.file.filename;
+      data.image = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
     }
 
     const product = await Product.findByIdAndUpdate(
@@ -123,13 +118,7 @@ export const updateProduct = async (req, res) => {
     res.json(product);
 
   } catch (error) {
-
-    console.log(error);
-
-    res.status(500).json({
-      message: "Update failed"
-    });
-
+    console.log("UPDATE ERROR:", error);
+    res.status(500).json({ message: "Update failed" });
   }
-
 };
